@@ -1,9 +1,15 @@
 import json
+import os
 import subprocess
+
+# Mundando para a pasta raiz do wordpress
+def RaizWordpress(RaizWord):
+    os.chdir(RaizWord)
+    # print(os.getcwd())
 
 # Envio de uma midia
 def UploadMedia() :
-    userMedia = input('Midia url? %s')
+    userMedia = input('Midia url? ')
     subprocess.run('wp media import %s' % userMedia , shell=True)
 
 # Envio de post
