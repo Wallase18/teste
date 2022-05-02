@@ -1,55 +1,56 @@
 import json
-import subprocess, sys, os
-import datetime
-
+import subprocess
 
 # Envio de uma midia
-# userMedia = input('▲ Media url? %s')
-# subprocess.run('wp media import %s' % userMedia , shell=True)
-
+def UploadMedia() :
+    userMedia = input('Midia url? %s')
+    subprocess.run('wp media import %s' % userMedia , shell=True)
 
 # Envio de post
-# usertitle = input("Title? ")
-# userdesc = input("Desc? ")
-# date = input("Insiri data e hora ( exemplo 2020-12-01 14:00:00): ")
-# subprocess.run('wp post create --post_title="%s" --post_content"%s" --post_status=publish --post_date="%s"' % (usertitle, userdesc, date) , shell=True)
-
+def CreatePost():
+    Title = input("Titulo? ")
+    Desc = input("Descrição? ")
+    Date = input("Insiri data e hora ( exemplo 2020-12-01 14:00:00): ")
+    subprocess.run('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_Date="%s"' % (Title, Desc, Date) , shell=True)
 
 # Cria um post atraves de um arquivo json
-# with open('C:/Users/BrasoDev/Downloads/teste/teste.json', 'r', encoding='utf-8') as file:
-#     data = json.load(file)
-#     for i in data:
-#         subprocess.run('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_date="%s"' % (i['nome'], i['descricao'], i['data']) , shell=True)
-
-
+def CreatePostJson():
+    with open('C:/Users/BrasoDev/Downloads/teste/teste.json', 'r', encoding='utf-8') as File:
+        Data = json.load(File)
+        for i in Data:
+            subprocess.run('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_date="%s"' % (i['nome'], i['descricao'], i['data']) , shell=True)
 
 # Cria um post atraves de um arquivo json e envia uma midia
-# with open('C:/Users/BrasoDev/Downloads/teste/teste.json', 'r', encoding='utf-8') as file:
-#     data = json.load(file)
-#     for i in data:
-#         cmd = subprocess.check_output('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_date="%s"' % (i['nome'], i['descricao'], i['data']) , shell = True)
-#         id_post = (str(cmd)[24:27])
-#         userMedia = input('▲ Media url? %s')
-#         subprocess.run('wp media import %s --post_id=%s --featured_image --porcelain' % (userMedia, id_post), shell=True)
-
+def CreateUpload():
+    with open('C:/Users/BrasoDev/Downloads/teste/teste.json', 'r', encoding='utf-8') as File:
+        Data = json.load(File)
+        for i in Data:
+            Cmd = subprocess.check_output('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_date="%s"' % (i['nome'], i['descricao'], i['data']) , shell = True)
+            ConvertStr = str(Cmd)
+            IdPost = ConvertStr.replace("'", "").replace("b","").replace(".","").split()
+            Media = input('Media url? ')
+            subprocess.run('wp media import %s --post_id=%s --featured_image --porcelain' % (Media, IdPost[3]), shell=True)
 
 # Cria um post com midia na descrição do post
-# usertitle = input("Title? ")
-# Desc = input("Desc? ")
-# userMedia = input('Media url? %s')
-# date = input("Insiri data e hora ( exemplo 2020-12-01 14:00:00): ")
-# cmd = subprocess.check_output('wp media import %s --featured_image --porcelain' % userMedia, shell=True)
-# media = (str(cmd) [2:5])
-# desc_and_midia = Desc + ("[gallery ids='$(wp media import %s --porcelain)' size='full']" % media)
-# subprocess.run('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_date="%s"' % (usertitle, desc_and_midia, date), shell=True)
-
+def PostMidia():
+    Title = input("Titulo? ")
+    Desc = input("Descrição? ")
+    Media = input('Midia url? ')
+    Date = input("Insiri data e hora ( exemplo 2020-12-01 14:00:00): ")
+    Cmd = subprocess.check_output('wp media import %s --featured_image --porcelain' % Media, shell=True)
+    ConvertStr = str(Cmd) 
+    IdMedia = ConvertStr.replace("'", "").replace("b","")
+    DescMidia = Desc + ("[gallery ids='$(wp media import %s --porcelain)' size='full']" % Media)
+    subprocess.run('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_date="%s"' % (Title, DescMidia, Date), shell=True)
 
 # Cria um post atraves de um arquivo json com midia na descrição do post
-# with open('C:/Users/BrasoDev/Downloads/teste/teste.json', 'r', encoding='utf-8') as file:
-#     data = json.load(file)
-#     for i in data:
-#         userMedia = input('▲ Media url? ')
-#         cmd = subprocess.check_output('wp media import %s --featured_image --porcelain' % userMedia, shell=True)
-#         media = (str(cmd) [2:5])
-#         desc_and_midia = i['descricao'] + ("[gallery ids='$(wp media import %s --porcelain)' size='full']" % media)
-#         subprocess.run('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_date="%s"' % (i['nome'], desc_and_midia, i['data']), shell=True)
+def MidiaDesc():
+    with open('C:/Users/BrasoDev/Downloads/teste/teste.json', 'r', encoding='utf-8') as File:
+        Data = json.load(File)
+        for i in Data:
+            Media = input('Midia url? ')
+            Cmd = subprocess.check_output('wp media import %s --featured_image --porcelain' % Media, shell=True)
+            ConvertStr = str(Cmd)
+            IdMedia = ConvertStr.replace("'", "").replace("b","")
+            DescMidia = i['descricao'] + ("[gallery ids='$(wp media import %s --porcelain)' size='full']" % IdMedia)
+            subprocess.run('wp post create --post_title="%s" --post_content="%s" --post_status=publish --post_date="%s"' % (i['nome'], DescMidia, i['data']), shell=True)
